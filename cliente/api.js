@@ -1,4 +1,4 @@
-const API_URL = "URL_VERCEL";
+const API_URL = "https://netflix-bay-six.vercel.app"; // Cambia esto a la URL de tu API
 
 // Obtener películas
 async function obtenerPeliculas() {
