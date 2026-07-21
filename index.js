@@ -8,7 +8,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 app.use(cors());
 
-mongoose.connect("mongodb+srv://grupo:grupo@servidorprueba.ygegryf.mongodb.net/netflix")
+// Usamos los tres nodos directamente porque la red actual rechaza consultas DNS SRV.
+// Es equivalente a la URI mongodb+srv original, pero no depende de _mongodb._tcp.
+mongoose.connect("mongodb://grupo:grupo@ac-g89jfcg-shard-00-00.ygegryf.mongodb.net:27017,ac-g89jfcg-shard-00-01.ygegryf.mongodb.net:27017,ac-g89jfcg-shard-00-02.ygegryf.mongodb.net:27017/netflix?ssl=true&replicaSet=atlas-q8azcb-shard-0&authSource=admin&retryWrites=true&w=majority")
 .then(()=>{
     console.log("Conectado correctamente a MongoDB");
 })
