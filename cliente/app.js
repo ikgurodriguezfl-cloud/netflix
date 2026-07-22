@@ -53,7 +53,89 @@ btnConsultar.addEventListener("click", async () => {
 
             const li = document.createElement("li");
 
-            li.textContent = pelicula.titulo;
+            const nombre = document.createElement("span");
+            nombre.textContent = pelicula.titulo;
+
+            const btnEditar = document.createElement("button");
+            btnEditar.type = "button";
+            btnEditar.textContent = "Editar";
+
+            const formularioEditar = document.createElement("form");
+            formularioEditar.className = "formulario-editar";
+
+            const campos = [
+                ["titulo", "text"], ["genero", "text"], ["a\u00F1o", "number"],
+                ["duracion", "number"], ["idioma", "text"], ["calificacion", "number"]
+            ];
+
+            campos.forEach(([campo, tipo]) => {
+                const input = document.createElement("input");
+                input.name = campo;
+                input.type = tipo;
+                input.value = pelicula[campo];
+                input.required = true;
+                input.placeholder = campo;
+                if (campo === "calificacion") {
+                    input.min = "0";
+                    input.max = "10";
+                    input.step = "0.1";
+                }
+                formularioEditar.appendChild(input);
+            });
+
+            const btnGuardar = document.createElement("button");
+            btnGuardar.type = "submit";
+            btnGuardar.textContent = "Guardar cambios";
+            formularioEditar.appendChild(btnGuardar);
+
+            btnEditar.addEventListener("click", () => {
+                formularioEditar.classList.toggle("visible");
+            });
+
+            formularioEditar.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                btnGuardar.disabled = true;
+
+                const datos = new FormData(formularioEditar);
+                const peliculaActualizada = {
+                    titulo: datos.get("titulo"),
+                    genero: datos.get("genero"),
+                    ["a\u00F1o"]: Number(datos.get("a\u00F1o")),
+                    duracion: Number(datos.get("duracion")),
+                    idioma: datos.get("idioma"),
+                    calificacion: Number(datos.get("calificacion"))
+                };
+
+                try {
+                    await actualizarPelicula(pelicula._id, peliculaActualizada);
+                    Object.assign(pelicula, peliculaActualizada);
+                    nombre.textContent = pelicula.titulo;
+                    formularioEditar.classList.remove("visible");
+                } catch (error) {
+                    alert(error.message);
+                } finally {
+                    btnGuardar.disabled = false;
+                }
+            });
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.type = "button";
+            btnEliminar.textContent = "Eliminar";
+            btnEliminar.setAttribute("aria-label", `Eliminar ${pelicula.titulo}`);
+
+            btnEliminar.addEventListener("click", async () => {
+                btnEliminar.disabled = true;
+
+                try {
+                    await eliminarPelicula(pelicula._id);
+                    li.remove();
+                } catch (error) {
+                    alert(error.message);
+                    btnEliminar.disabled = false;
+                }
+            });
+
+            li.append(nombre, btnEditar, btnEliminar, formularioEditar);
 
             listaPeliculas.appendChild(li);
 

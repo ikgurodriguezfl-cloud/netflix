@@ -31,3 +31,37 @@ async function agregarPelicula(pelicula) {
     return await respuesta.json();
 
 }
+
+// Eliminar película
+async function eliminarPelicula(id) {
+
+    const respuesta = await fetch(`${API_URL}/peliculas/${id}`, {
+        method: "DELETE"
+    });
+
+    if (!respuesta.ok) {
+        throw new Error("Error al eliminar la película");
+    }
+
+    return await respuesta.json();
+
+}
+
+// Actualizar película
+async function actualizarPelicula(id, pelicula) {
+
+    const respuesta = await fetch(`${API_URL}/peliculas/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(pelicula)
+    });
+
+    if (!respuesta.ok) {
+        throw new Error("Error al actualizar la película");
+    }
+
+    return await respuesta.json();
+
+}
